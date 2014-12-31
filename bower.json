@@ -10,8 +10,7 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests",
-    "**/.*"
+    "tests"
   ],
   "dependencies": {
     "angular-latest": "~1.3.0",

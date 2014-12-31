@@ -5,7 +5,7 @@
         <h5 id="author">{{atPost.author}}</h5>
     </div>
     <div id="sections" class="row">
-        <div ng-repeat="section in god.sections" ng-switch="section.type" class="col-md-12">
+        <div ng-repeat="section in atPost.sections" ng-switch="section.type" class="col-md-12">
             <div ng-switch-when="image">
                 <div class="thumbnail">
                     <img ng-src="{{section.content}}" class="img-responsive">
