@@ -1,0 +1,37 @@
+{
+  "name": "Atlas",
+  "version": "0.1.0",
+  "authors": [
+    "Kevin Wang"
+  ],
+  "description": "static site engine",
+  "license": "BSD",
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "**/.*"
+  ],
+  "dependencies": {
+    "angular-latest": "~1.3.0",
+    "angular-ui-router": "~0.2.11",
+    "bootstrap": "~3.2.0",
+    "jquery": "~2.1.1",
+    "fontawesome": "~4.2.0",
+    "moment": "~2.8.3",
+    "headroom.js": "~0.7.0",
+    "angular-ui-utils": "~0.1.1",
+    "moment-duration-format": "~1.3.0"
+  },
+  "main": "production/atlas.min.js",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "atlas",
+    "static",
+    "site",
+    "engine"
+  ]
+}

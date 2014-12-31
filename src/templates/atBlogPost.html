@@ -1,0 +1,29 @@
+<div>
+    <div class="page-header">
+        <h1 id="title">{{atPost.title}} <small id="subtitle">{{atPost.subtitle}}</small></h1>
+        <h6 id="date">{{atPost.date | atDate:'long'}}</h6>
+        <h5 id="author">{{atPost.author}}</h5>
+    </div>
+    <div id="sections" class="row">
+        <div ng-repeat="section in atPost.sections" ng-switch="section.type" class="col-md-12">
+            <div ng-switch-when="image">
+                <div class="thumbnail">
+                    <img ng-src="{{section.content}}" class="img-responsive">
+                    <div class="caption">
+                        <p>
+                            {{section.caption}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div ng-switch-when="text">
+                <p>
+                    {{section.content}}
+                </p>
+            </div>
+            <div ng-switch-default>
+                {{section.content}}
+            </div>
+        </div>
+    </div>
+</div>

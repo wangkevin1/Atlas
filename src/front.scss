@@ -1,0 +1,74 @@
+@import "headroom", "util";
+.no-padding {
+  padding: 0;
+}
+a.no-style {
+  text-decoration: none;
+  color: inherit;
+}
+.inline {
+  display: inline;
+}
+.inline-block {
+  display: inline-block;
+
+}
+.center-container {
+   @include pseudo-center('.center');
+}
+.block {
+  display: block;
+}
+.hcenter {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+
+}
+//bootstrap horizontal scroll fix;
+.navbar-nav {
+  margin: 0;
+  padding: 0 15px;
+
+}
+//minimum height to content, otherwise 80% of screen
+//for desktop only
+@media (min-width: 768px) {
+  #mainfront {
+    @include def-minheight(80vh);
+    @include pseudo-center('.jumbotron');
+  }
+  #front {
+    @include def-minheight(60vh);
+    @include pseudo-center('.jumbotron');
+  }
+}
+
+@media (max-width: 768px) {
+    //build season countdown timer 
+    #cdBuildSeason{
+        font-size: 3em;
+    }
+}
+
+//centering container in navbar
+nav#navbar {
+  @include def-minheight(80px);
+  @include pseudo-center('.container');
+  ul.navbar-nav {
+    font-size: 16px;
+    li {
+      &:hover {
+        background-color: #eeeaea;
+      }
+    }
+  }
+}
+
+p {
+  color: #333;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 16px;
+  max-width: 50em;
+}

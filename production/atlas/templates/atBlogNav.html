@@ -1,0 +1,11 @@
+<form class="">
+    <div class="form-group">
+        <label>search</label>
+        <div class="input-group">
+            <input type="text" ng-model="blogArraySearchText" placeholder="search">
+        </div>
+    </div>
+</form>
+<div class="list-group">
+    <a ng-repeat="post in blogNav | filter:blogArraySearchText" class="list-group-item" ui-sref="blog.{{blog}}({postId: '{{post.id}}'})"><h5>{{post.title}}</h5><small>{{post.date | atDate}}</small></a>
+</div>

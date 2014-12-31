@@ -1,0 +1,145 @@
+<header>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Atlas <small>a static site engine</small></h1>
+        </div>
+        <div class="page-header">
+            <h1>Blog Post Creator</h1>
+        </div>
+
+        <form name="blogPost" class="form-horizontal" novalidate ng-controller="CPostCreator as post">
+           <div class="row">
+              <div class="col-md-6">
+                   <div class="form-group">
+                       <label>Blog Name</label>
+                       <div class="input-group">
+                           <input required type="text" name="prefix" ng-model="post.thePost.prefix" placeholder="blog name" class="form-control">
+                            <span class="input-group-addon">
+                            <span ng-show="blogPost.prefix.$invalid && !blogPost.prefix.$pristine" class="label label-warning"><i class="fa fa-warning fa-lg"></i> Blog Name must be filled</span>
+                            <span ng-show="blogPost.prefix.$valid && !blogPost.prefix.$pristine"><span class="label label-success"><i class="fa fa-check"></i></span></span>
+                            </span>
+                       </div>
+                   </div>
+               </div>
+               <div class="col-md-6">
+                   <div class="form-group">
+                       <label>Post ID [format: (4 digit season year)-(4 digit blog post number); example for season 15, blog post 6: 2015-0006]</label>
+                       <div class="input-group">
+                           <input required type="text" name="id" ng-model="post.thePost.id" ui-mask="9999-9999" placeholder="year-post" ng-pattern="/\d{8}/" class="form-control">
+                            <span class="input-group-addon">
+                            <span ng-show="blogPost.id.$invalid && !blogPost.id.$pristine" class="label label-warning"><i class="fa fa-warning fa-lg"></i> ID must be filled</span>
+                            <span ng-show="blogPost.id.$valid && !blogPost.id.$pristine"><span class="label label-success"><i class="fa fa-check"></i></span></span>
+                            </span>
+                       </div>
+                   </div>
+               </div>
+           </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <div class="input-group">
+                            <input required type="text" name="title" ng-model="post.thePost.title" placeholder="Title" class="form-control">
+                            <span class="input-group-addon">
+                            <span ng-show="blogPost.title.$invalid && !blogPost.title.$pristine" class="label label-warning"><i class="fa fa-warning fa-lg"></i> Title must be filled</span>
+                            <span ng-show="blogPost.title.$valid && !blogPost.title.$pristine"><span class="label label-success"><i class="fa fa-check"></i></span></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Subtitle</label>
+                        <div class="input-group">
+                            <input required type="text" name="subtitle" ng-model="post.thePost.subtitle" placeholder="Subtitle" class="form-control">
+                            <span class="input-group-addon">
+                            <span ng-show="blogPost.subtitle.$invalid && !blogPost.subtitle.$pristine" class="label label-warning"><i class="fa fa-warning fa-lg"></i> Subtitle must be filled</span>
+                            <span ng-show="blogPost.subtitle.$valid && !blogPost.subtitle.$pristine"><span class="label label-success"><i class="fa fa-check"></i></span></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Author</label>
+                        <div class="input-group">
+                            <input required type="text" name="author" ng-model="post.thePost.author" placeholder="Author" class="form-control">
+                            <span class="input-group-addon">
+                            <span ng-show="blogPost.author.$invalid && !blogPost.author.$pristine" class="label label-warning"><i class="fa fa-warning fa-lg"></i> Author must be filled</span>
+                            <span ng-show="blogPost.author.$valid && !blogPost.author.$pristine"><span class="label label-success"><i class="fa fa-check"></i></span></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <div class="input-group">
+                            <input required type="text" name="date" ng-model="post.thePost.date" ui-mask="9999-99-99" placeholder="year-mm-dd" ng-pattern="/\d{8}/" class="form-control">
+                            <span class="input-group-addon">
+                            <button type="button" class="btn btn-default" ng-click="post.dateSetToday()">Today</button>
+                            <span ng-show="blogPost.date.$invalid && !blogPost.date.$pristine" class="label label-warning"><i class="fa fa-warning fa-lg"></i> Date must be filled</span>
+                            <span ng-show="blogPost.date.$valid && !blogPost.date.$pristine"><span class="label label-success"><i class="fa fa-check"></i></span></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" ng-repeat="section in post.thePost.sections" ng-switch="section.type">
+                    <div class="form-group">
+                        <label>Section {{$index+1}} : {{section.type}}</label>
+                        <div class="input-group">
+                            <div ng-switch-when="text">
+                                <textarea class="form-control" rows="4" placeholder="paragraph text" ng-model="section.content"></textarea>
+                            </div>
+                            <div ng-switch-when="image">
+                                <input required type="text" ng-model="section.content" placeholder="image:url" class="form-control">
+                            </div>
+                            <div ng-switch-when="video">
+                                <input required type="text" ng-model="section.content" placeholder="video:url" class="form-control">
+                            </div>
+                            <div ng-switch-default>
+                                default
+                            </div>
+
+                            <span class="input-group-addon"><button type="button" class="btn btn-danger" ng-click="post.deleteSection($index)">Delete</button></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" ng-switch-when="image">
+                            <input required type="text" ng-model="section.caption" placeholder="image:caption" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="hcenter">
+                        <div class="btn-group" aria-label="...">
+                            <button type="button" class="btn btn-default" ng-click="post.addSection(post.SECTION_TYPE.text)">Add Text Section</button>
+                            <button type="button" class="btn btn-default" ng-click="post.addSection(post.SECTION_TYPE.image)">Add Image Section</button>
+                            <button disabled="disabled" type="button" class="btn btn-default" ng-click="post.addSection(post.SECTION_TYPE.video)">Add Video Section</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="hcenter">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" ng-click="post.exportJson()">Generage Blog Post JSON</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+
+    </div>
+</header>
