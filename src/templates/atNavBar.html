@@ -1,4 +1,4 @@
-<headroom id="mainnav" tolerance='4'>
+<headroom id="atlasNav" tolerance='4'>
     <nav id="navbar" class="navbar navbar-default" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -8,9 +8,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="no-style no-padding navbar-brand" ui-sref="home({sectionId:''})">
-                    <logo-icon logo-icon-size="navbar" class="inline"></logo-icon>
-                    <h2 class="inline">rototypes</h2>
+                <a class="no-style no-padding navbar-brand" ui-sref="{{brand.state}}" ng-include="brand.template">
                 </a>
             </div>
             <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
@@ -27,4 +25,4 @@
         </div>
     </nav>
 </headroom>
-<div headroom-spacer="mainnav"></div>
+<div headroom-spacer></div>

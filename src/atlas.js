@@ -1,10 +1,10 @@
 /*  
- *            $$\     $$\                     
- *            $$ |    $$ |                    
- *  $$$$$$\ $$$$$$\   $$ | $$$$$$\   $$$$$$$\ 
+ *            $$\     $$\
+ *            $$ |    $$ |
+ *  $$$$$$\ $$$$$$\   $$ | $$$$$$\   $$$$$$$\
  *  \____$$\\_$$  _|  $$ | \____$$\ $$  _____|
- *  $$$$$$$ | $$ |    $$ | $$$$$$$ |\$$$$$$\  
- * $$  __$$ | $$ |$$\ $$ |$$  __$$ | \____$$\ 
+ *  $$$$$$$ | $$ |    $$ | $$$$$$$ |\$$$$$$\
+ * $$  __$$ | $$ |$$\ $$ |$$  __$$ | \____$$\
  * \$$$$$$$ | \$$$$  |$$ |\$$$$$$$ |$$$$$$$  |
  *  \_______|  \____/ \__| \_______|\_______/
  *
@@ -12,7 +12,7 @@
  *
  */
 
-var Atlas = angular.module('Atlas', ['ui.router']);
+var Atlas = angular.module('Atlas', ['ui.router', 'ui.utils', 'ui.bootstrap','headroom']);
 
 //////////////
 //PRODUCTION//
@@ -325,7 +325,16 @@ Atlas.provider('atPage', ['$stateProvider',
 Atlas.provider('atNav', [
 
     function () {
+        var _brand = "";
         var _states = [];
+
+        var setBrand = function (aTemplate, aState) {
+            _brand = {
+                template: aTemplate,
+                state: aState
+            };
+            return this;
+        };
 
         var addTab = function (aName, aState) {
             _states.push({
@@ -335,22 +344,29 @@ Atlas.provider('atNav', [
             return this;
         };
 
-        var $get = [
+        var $get = ['$http',
 
-            function () {
+            function ($http) {
+                var brand = _brand;
                 var states = _states;
+
+                var getBrand = function (callback) {
+                    return brand;
+                };
 
                 var getTabs = function () {
                     return states;
                 };
 
                 return {
+                    getBrand: getBrand,
                     getTabs: getTabs
                 };
             }
         ];
         return {
             $get: $get,
+            setBrand: setBrand,
             addTab: addTab
         };
     }
@@ -365,6 +381,7 @@ Atlas.directive('atNavBar', [
             templateUrl: 'vendor/atlas/templates/atNavBar.html',
             controller: ['$scope', 'atNav',
                 function ($scope, atNav) {
+                    $scope.brand = atNav.getBrand();
                     $scope.tabs = atNav.getTabs();
                 }
             ]
@@ -423,10 +440,9 @@ Atlas.directive('atCountdown', [
             restrict: 'A',
             scope: {
                 end: '@atCountdown',
-                postMessage: '@atCountdownPost',
-                id: '@atCountdownId'
+                postMessage: '@atCountdownPost'
             },
-            template: '<h1 id="{{id}}">{{time}}<br><small>{{postMessage}}</small></h1>',
+            template: '<h1 class="atCountdown">{{time}}<br><small>{{postMessage}}</small></h1>',
             controller: ['$scope', '$interval',
                 function ($scope, $interval) {
                     var timerDaemon = $interval(function () {
@@ -437,10 +453,40 @@ Atlas.directive('atCountdown', [
 }]);
 
 Atlas.directive('atCarousel', [
-    function() {
-        
+
+    function () {
+        return {
+            restrict: 'A',
+            scope: {},
+            template: '<div ng-transclude></div>'
+            controller: ['$scope', '$element',
+                function ($scope, $element) {
+                    
+                }
+            ]
+        }
     }
 ]);
+
+
+////////////////
+//HEADROOM NAV//
+////////////////
+
+Atlas.directive('atNavSpacer', function () {
+    return {
+        restrict: 'A',
+        scope: {},
+        controller: ['$scope', '$element',
+            function ($scope, $element) {
+                $element.height($('#atlasNav').height());
+            }
+        ]
+    };
+});
+
+
+//ATLAS//
 
 console.log('%c\n' +
     '            $$\\     $$\\                      \n' +

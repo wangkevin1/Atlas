@@ -232,7 +232,7 @@ gulp.task('atScript', function () {
 });
 
 gulp.task('atScss', function () {
-    return gulp.src('src/front.scss')
+    return gulp.src('src/atlas.scss')
         .pipe(rename('atlas.min.css'))
         .pipe(sass())
         .pipe(csso())

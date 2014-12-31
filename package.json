@@ -2,7 +2,7 @@
   "name": "Atlas",
   "version": "0.1.0",
   "description": "static site engine",
-  "main": "production/atlas.min.js",
+  "main": "production/atlas/atlas.min.js",
   "author": "Kevin Wang",
   "license": "GPL 3",
   "devDependencies": {

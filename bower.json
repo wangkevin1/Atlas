@@ -1,6 +1,6 @@
 {
   "name": "Atlas",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "authors": [
     "Kevin Wang"
   ],
@@ -21,9 +21,10 @@
     "moment": "~2.8.3",
     "headroom.js": "~0.7.0",
     "angular-ui-utils": "~0.1.1",
-    "moment-duration-format": "~1.3.0"
+    "moment-duration-format": "~1.3.0",
+    "angular-ui-bootstrap-bower": "~0.12.0"
   },
-  "main": "production/atlas.min.js",
+  "main": "production/atlas/atlas.min.js",
   "moduleType": [
     "node"
   ],

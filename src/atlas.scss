@@ -1,4 +1,4 @@
-@import "headroom", "util";
+@import "atHeadroom", "util";
 .no-padding {
   padding: 0;
 }
@@ -31,22 +31,26 @@ a.no-style {
   padding: 0 15px;
 
 }
+
+.carousel a {
+    cursor: pointer;
+}
+
 //minimum height to content, otherwise 80% of screen
 //for desktop only
 @media (min-width: 768px) {
-  #mainfront {
+  .mainfront {
     @include def-minheight(80vh);
     @include pseudo-center('.jumbotron');
   }
-  #front {
+  .front {
     @include def-minheight(60vh);
     @include pseudo-center('.jumbotron');
   }
 }
 
 @media (max-width: 768px) {
-    //build season countdown timer 
-    #cdBuildSeason{
+    .at-countdown{
         font-size: 3em;
     }
 }
