@@ -1,6 +1,6 @@
 {
   "name": "Atlas",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "static site engine",
   "main": "production/atlas/atlas.min.js",
   "author": "Kevin Wang",

@@ -1,78 +1,132 @@
-@import "atHeadroom", "util";
-.no-padding {
-  padding: 0;
+@import "atHeadroom",
+"util";
+ .no-padding {
+    padding: 0;
 }
 a.no-style {
-  text-decoration: none;
-  color: inherit;
+    text-decoration: none;
+    color: inherit;
 }
 .inline {
-  display: inline;
+    display: inline;
 }
 .inline-block {
-  display: inline-block;
-
+    display: inline-block;
 }
 .center-container {
-   @include pseudo-center('.center');
+    @include pseudo-center('.center');
 }
 .block {
-  display: block;
+    display: block;
 }
 .hcenter {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 //bootstrap horizontal scroll fix;
 .navbar-nav {
-  margin: 0;
-  padding: 0 15px;
-
+    margin: 0;
+    padding: 0 15px;
 }
-
-.carousel a {
-    cursor: pointer;
-}
-
 //minimum height to content, otherwise 80% of screen
 //for desktop only
 @media (min-width: 768px) {
-  .mainfront {
-    @include def-minheight(80vh);
-    @include pseudo-center('.jumbotron');
-  }
-  .front {
-    @include def-minheight(60vh);
-    @include pseudo-center('.jumbotron');
-  }
+    .mainfront {
+        @include def-minheight(80vh);
+        @include pseudo-center('.jumbotron');
+    }
+    .front {
+        @include def-minheight(60vh);
+        @include pseudo-center('.jumbotron');
+    }
 }
-
 @media (max-width: 768px) {
-    .at-countdown{
+    .at-countdown {
         font-size: 3em;
     }
 }
 
-//centering container in navbar
-nav#navbar {
-  @include def-minheight(80px);
-  @include pseudo-center('.container');
-  ul.navbar-nav {
-    font-size: 16px;
-    li {
-      &:hover {
-        background-color: #eeeaea;
-      }
-    }
-  }
+//CAROUSEL//
+.at-slide {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background-attachment: local;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
 }
 
+.at-carousel {
+    position: relative;
+    background-color: rgba(120, 120, 120, 0.25);
+    overflow: hidden;
+    @include pseudo-center('.center-transcluded');
+    color: #fafafa;
+    h1, h2, h3, h4, h5, h6 {
+        color: #fafafa;
+    }
+    small {
+        color: #eeeeee;
+    }
+    .center-transcluded {
+        position: relative;
+        z-index: 6;
+        background-color: rgba(120, 120, 120, 0.66);
+    }
+    .jumbotron {
+        background-color: transparent;
+    }
+    .at-slide-current {
+        @extend .at-slide;
+        top: 0;
+        left: 0;
+        @include animation('atSlideCarousel 12s 0s infinite');
+    }
+    .at-slide-latter {
+        @extend .at-slide;
+        top: 0;
+        left: 100%;
+        @include animation('atSlideCarousel 12s 0s infinite');
+    }
+    
+}
+
+@include keyframes('atSlideCarousel') {
+    0% {
+        @include transform('translateX(0)');
+        animation-timing-function: ease;
+    }
+    25%, 100% {
+        @include transform('translateX(-100%)');
+        animation-timing-function: ease;
+    }
+}
+
+
+//centering container in navbar
+nav#atnavbar {
+    @include def-minheight(80px);
+    @include pseudo-center('.container');
+    ul.navbar-nav {
+        font-size: 16px;
+        li {
+            &:hover {
+                background-color: #eeeaea;
+            }
+        }
+    }
+}
 p {
-  color: #333;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 16px;
-  max-width: 50em;
+    color: #333;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
+    max-width: 50em;
+//    &::first-letter{
+//        font-size: 2em;
+//        float: left;
+//    }
 }

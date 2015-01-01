@@ -8,7 +8,8 @@
  * \$$$$$$$ | \$$$$  |$$ |\$$$$$$$ |$$$$$$$  |
  *  \_______|  \____/ \__| \_______|\_______/
  *
- *  Kevin Wang: https://github.com/wangkevin1
+ *  https://github.com/wangkevin1/Atlas
+ *  Kevin Wang 
  *
  */
 
@@ -24,29 +25,6 @@ Atlas.config(['$compileProvider',
     }
 ]);
 
-///////////////
-//MAIN ROUTER//
-///////////////
-
-Atlas.provider('atRouter', ['$urlRouterProvider',
-    function ($urlRouterProvider) {
-
-        var defaultRoute = function (route) {
-            $urlRouterProvider.otherwise(route);
-        };
-
-        var $get = function () {
-            return {
-
-            };
-        };
-
-        return {
-            $get: $get,
-            defaultRoute: defaultRoute
-        };
-    }
-]);
 
 /////////
 //BLOGS//
@@ -389,6 +367,20 @@ Atlas.directive('atNavBar', [
     }
 ]);
 
+
+Atlas.directive('atNavSpacer', function () {
+    return {
+        restrict: 'A',
+        scope: {},
+        controller: ['$scope', '$element',
+            function ($scope, $element) {
+                $element.height($('#atnavbar').height());
+            }
+        ]
+    };
+});
+
+
 //////////////
 //ATLAS UTIL//
 //////////////
@@ -458,32 +450,67 @@ Atlas.directive('atCarousel', [
         return {
             restrict: 'A',
             scope: {},
-            template: '<div ng-transclude></div>'
+            transclude: true,
+            templateUrl: 'vendor/atlas/templates/atCarousel.html',
             controller: ['$scope', '$element',
                 function ($scope, $element) {
-                    
+                    $element.addClass('at-carousel');
+                    $('.at-slide-current').css('background-image', 'url(http://lorempixel.com/1920/1080/city/)');
+                    $('.at-slide-latter').css('background-image', 'url(http://lorempixel.com/1920/1080/city/)');
                 }
             ]
-        }
+        };
     }
 ]);
 
 
-////////////////
-//HEADROOM NAV//
-////////////////
+///////////////
+//MAIN ROUTER//
+///////////////
 
-Atlas.directive('atNavSpacer', function () {
-    return {
-        restrict: 'A',
-        scope: {},
-        controller: ['$scope', '$element',
-            function ($scope, $element) {
-                $element.height($('#atlasNav').height());
-            }
-        ]
-    };
-});
+Atlas.provider('at', ['$urlRouterProvider', 'atBlogProvider', 'atPageProvider', 'atNavProvider',
+    function ($urlRouterProvider, blog, page, nav) {
+
+        var defaultRoute = function (route) {
+            $urlRouterProvider.otherwise(route);
+        };
+        
+        var createBlog = function(name, data, prefix, postArray) {
+            blog.createBlog(name, data, prefix, postArray);
+            return this;
+        };
+        
+        var createPage = function(name, data) {
+            page.createPage(name, data);
+            return this;
+        };
+        
+        var setBrand = function(template, state) {
+            nav.setBrand(template, state);
+            return this;
+        };
+        
+        var addTab = function(name, state) {
+            nav.addTab(name, state);
+            return this;
+        };
+
+        var $get = function () {
+            return {
+
+            };
+        };
+
+        return {
+            $get: $get,
+            defaultRoute: defaultRoute, 
+            createBlog: createBlog, 
+            createPage: createPage, 
+            setBrand: setBrand, 
+            addTab: addTab
+        };
+    }
+]);
 
 
 //ATLAS//
@@ -498,5 +525,6 @@ console.log('%c\n' +
     ' \\$$$$$$$ | \\$$$$  |$$ |\\$$$$$$$ |$$$$$$$  | \n' +
     '  \\_______|  \\____/ \\__| \\_______|\\_______/  \n' +
     '\n' +
-    'Kevin Wang: https://github.com/wangkevin1                            \n\n ',
+    'https://github.com/wangkevin1/Atlas                                  \n' + 
+    'Kevin Wang\n\n ',
     'font-family: Consolas, Monaco, monospace; color: #bc2200');

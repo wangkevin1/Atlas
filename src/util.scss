@@ -22,3 +22,27 @@
         vertical-align: middle;
     }
 }
+
+@mixin animation($animation) {
+    animation: #{$animation};
+    -webkit-animation: #{$animation};
+    -moz-animation: #{$animation};
+}
+
+@mixin transform($exec) {
+    transform: #{$exec};
+    -webkit-transform: #{$exec};
+    -moz-transform: #{$exec};
+}
+
+@mixin keyframes($name) {
+    @keyframes #{$name} {
+        @content;
+    } 
+    @-webkit-keyframes #{$name} {
+        @content; 
+    }
+    @-moz-keyframes #{$name} {
+        @content;
+    }  
+}

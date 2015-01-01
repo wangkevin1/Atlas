@@ -9,7 +9,7 @@
 //vendor
 var VENDORS = [
     'bower_components/moment-duration-format/lib/moment-duration-format.js', 
-    'bower_components/atlas/production/**'
+    'bower_components/atlasjs/production/**'
 ];
 
 //browser-sync
