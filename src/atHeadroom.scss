@@ -1,12 +1,13 @@
 .headroom {
-  width: 100%;
-  position: fixed;
-  z-index: 16;
-  transition: transform 125ms linear;
+    width: 100%;
+    position: fixed;
+    z-index: 16;
+    transition: transform 125ms linear;
+    background-color: rgba(250, 250, 250, 0.8);
 }
 .headroom--pinned {
-  transform: translateY(0%);
+    transform: translateY(0%);
 }
 .headroom--unpinned {
-  transform: translateY(-100%);
+    transform: translateY(-100%);
 }

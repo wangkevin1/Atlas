@@ -56,6 +56,7 @@ a.no-style {
     overflow: hidden;
     @include pseudo-center('.center-transcluded');
     color: #fafafa;
+    @include def-minheight(0px);
     h1, h2, h3, h4, h5, h6 {
         color: #fafafa;
     }
@@ -72,21 +73,24 @@ a.no-style {
     }
     .at-slide {
         position: absolute;
-        z-index: -1;
         width: 100%;
         height: 100%;
         background-attachment: local;
         background-repeat: no-repeat;
         background-size: cover;
+        background-position: center;
         overflow: hidden;
+        z-index: -1;
     }
     .at-slide-current {
         top: 0;
         left: 0;
+        z-index: 2;
     }
     .at-slide-latter {
         top: 0;
         left: 100%;
+        z-index: 3;
     }
     .at-slide-slide {
         @include animation('atSlideCarousel 2s 0s');
@@ -107,7 +111,7 @@ a.no-style {
 
 
 //centering container in navbar
-nav#atnavbar {
+nav.atnavbar {
     @include def-minheight(80px);
     @include pseudo-center('.container');
     ul.navbar-nav {

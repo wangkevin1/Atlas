@@ -380,7 +380,7 @@ Atlas.directive('atNavSpacer', function () {
         scope: {},
         controller: ['$scope', '$element',
             function ($scope, $element) {
-                $element.height($element.parent().find('#atnavbar').height());
+                $element.height($element.parent().find('.atnavbar').height());
             }
         ]
     };
@@ -457,34 +457,35 @@ Atlas.directive('atCarousel', [
             restrict: 'A',
             scope: {
                 imageArray: '@atCarousel',
-                interval: '@atInterval'
+                interval: '@atInterval', 
+                height: '@atHeight', 
+                width: '@atWidth'
             },
             transclude: true,
             templateUrl: 'vendor/atlas/templates/atCarousel.html',
-            controller: ['$scope', '$element', '$http', '$timeout', '$animate',
-                function ($scope, $element, $http, $timeout, $animate) {
+            controller: ['$scope', '$element', '$http', '$interval', '$animate',
+                function ($scope, $element, $http, $interval, $animate) {
                     $element.addClass('at-carousel');
-                    $scope.interval = $scope.interval || 0;
+                    $scope.height = $scope.height || '100vh';
+                    $scope.width = $scope.width || '100%';
+                    $element.css('height', $scope.height).css('width', $scope.width);
+                    $scope.interval = ($scope.interval || 0) + 2000;
                     $http.get($scope.imageArray)
                         .success(function (data, status, headers, config) {
-                            var i = 0;
-                            var carouselAnimation = function () {
+                            var i = 1;
+                            $element.find('.at-slide-current').css('background-image', 'url(' + data[0] + ')');
+                            $element.find('.at-slide-latter').css('background-image', 'url(' + data[1] + ')');
+                            var carouselDaemon = $interval(function () {
                                 var slide1 = $element.find('.at-slide-current');
                                 var slide2 = $element.find('.at-slide-latter');
-                                slide1.css('background-image', 'url(' + data[i] + ')');
-                                slide2.css('background-image', 'url(' + data[(i + 1) % data.length] + ')');
-                                i = (i + 1) % data.length;
                                 $animate.addClass(slide1, 'at-slide-slide');
                                 $animate.addClass(slide2, 'at-slide-slide').then(function () {
-                                    $animate.removeClass(slide1, 'at-slide-slide');
-                                    $animate.removeClass(slide2, 'at-slide-slide');
-                                    slide1.removeClass('at-slide-current').addClass('at-slide-latter');
-                                    slide2.removeClass('at-slide-latter').addClass('at-slide-current');
-                                    var carouselTimeout = $timeout(carouselAnimation, $scope.interval);
+                                    i = (i + 1) % data.length;
+                                    slide1.css('background-image', 'url(' + data[i] + ')');
+                                    $animate.setClass(slide1, 'at-slide-latter', 'at-slide-current at-slide-slide');
+                                    $animate.setClass(slide2, 'at-slide-current', 'at-slide-latter at-slide-slide');
                                 });
-
-                            };
-                            carouselAnimation();
+                            }, $scope.interval);
                         })
                         .error(function (data, status, headers, config) {
                             console.error('atlas failed to retrieve: ' + $scope.imageArray, '\nstatus: ' + status);
