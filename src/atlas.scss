@@ -49,10 +49,8 @@ a.no-style {
 
 //CAROUSEL//
 
-
 .at-carousel {
     position: relative;
-    background-color: rgba(120, 120, 120, 0.25);
     overflow: hidden;
     @include pseudo-center('.center-transcluded');
     color: #fafafa;
