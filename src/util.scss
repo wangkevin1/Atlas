@@ -46,3 +46,9 @@
         @content;
     }  
 }
+
+@mixin animation-fill-mode($fillMode) {
+    animation-fill-mode: #{$fillMode};
+    -webkit-animation-fill-mode: #{$fillMode};
+    -moz-animation-fill-mode: #{$fillMode};
+}

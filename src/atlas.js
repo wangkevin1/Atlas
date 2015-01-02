@@ -9,11 +9,17 @@
  *  \_______|  \____/ \__| \_______|\_______/
  *
  *  https://github.com/wangkevin1/Atlas
- *  Kevin Wang 
+ *  Kevin Wang
  *
  */
 
-var Atlas = angular.module('Atlas', ['ui.router', 'ui.utils', 'ui.bootstrap','headroom']);
+var Atlas = angular.module('Atlas', ['ngAnimate', 'ui.router', 'ui.utils', 'ui.bootstrap', 'headroom']);
+
+/////////////
+//DEVELOPER//
+/////////////
+
+//console.monitorEvents(document.body);
 
 //////////////
 //PRODUCTION//
@@ -374,7 +380,7 @@ Atlas.directive('atNavSpacer', function () {
         scope: {},
         controller: ['$scope', '$element',
             function ($scope, $element) {
-                $element.height($('#atnavbar').height());
+                $element.height($element.parent().find('#atnavbar').height());
             }
         ]
     };
@@ -449,14 +455,40 @@ Atlas.directive('atCarousel', [
     function () {
         return {
             restrict: 'A',
-            scope: {},
+            scope: {
+                imageArray: '@atCarousel',
+                interval: '@atInterval'
+            },
             transclude: true,
             templateUrl: 'vendor/atlas/templates/atCarousel.html',
-            controller: ['$scope', '$element',
-                function ($scope, $element) {
+            controller: ['$scope', '$element', '$http', '$timeout', '$animate',
+                function ($scope, $element, $http, $timeout, $animate) {
                     $element.addClass('at-carousel');
-                    $('.at-slide-current').css('background-image', 'url(http://lorempixel.com/1920/1080/city/)');
-                    $('.at-slide-latter').css('background-image', 'url(http://lorempixel.com/1920/1080/city/)');
+                    $scope.interval = $scope.interval || 0;
+                    $http.get($scope.imageArray)
+                        .success(function (data, status, headers, config) {
+                            var i = 0;
+                            var carouselAnimation = function () {
+                                var slide1 = $element.find('.at-slide-current');
+                                var slide2 = $element.find('.at-slide-latter');
+                                slide1.css('background-image', 'url(' + data[i] + ')');
+                                slide2.css('background-image', 'url(' + data[(i + 1) % data.length] + ')');
+                                i = (i + 1) % data.length;
+                                $animate.addClass(slide1, 'at-slide-slide');
+                                $animate.addClass(slide2, 'at-slide-slide').then(function () {
+                                    $animate.removeClass(slide1, 'at-slide-slide');
+                                    $animate.removeClass(slide2, 'at-slide-slide');
+                                    slide1.removeClass('at-slide-current').addClass('at-slide-latter');
+                                    slide2.removeClass('at-slide-latter').addClass('at-slide-current');
+                                    var carouselTimeout = $timeout(carouselAnimation, $scope.interval);
+                                });
+
+                            };
+                            carouselAnimation();
+                        })
+                        .error(function (data, status, headers, config) {
+                            console.error('atlas failed to retrieve: ' + $scope.imageArray, '\nstatus: ' + status);
+                        });
                 }
             ]
         };
@@ -474,23 +506,23 @@ Atlas.provider('at', ['$urlRouterProvider', 'atBlogProvider', 'atPageProvider', 
         var defaultRoute = function (route) {
             $urlRouterProvider.otherwise(route);
         };
-        
-        var createBlog = function(name, data, prefix, postArray) {
+
+        var createBlog = function (name, data, prefix, postArray) {
             blog.createBlog(name, data, prefix, postArray);
             return this;
         };
-        
-        var createPage = function(name, data) {
+
+        var createPage = function (name, data) {
             page.createPage(name, data);
             return this;
         };
-        
-        var setBrand = function(template, state) {
+
+        var setBrand = function (template, state) {
             nav.setBrand(template, state);
             return this;
         };
-        
-        var addTab = function(name, state) {
+
+        var addTab = function (name, state) {
             nav.addTab(name, state);
             return this;
         };
@@ -503,10 +535,10 @@ Atlas.provider('at', ['$urlRouterProvider', 'atBlogProvider', 'atPageProvider', 
 
         return {
             $get: $get,
-            defaultRoute: defaultRoute, 
-            createBlog: createBlog, 
-            createPage: createPage, 
-            setBrand: setBrand, 
+            defaultRoute: defaultRoute,
+            createBlog: createBlog,
+            createPage: createPage,
+            setBrand: setBrand,
             addTab: addTab
         };
     }
@@ -525,6 +557,6 @@ console.log('%c\n' +
     ' \\$$$$$$$ | \\$$$$  |$$ |\\$$$$$$$ |$$$$$$$  | \n' +
     '  \\_______|  \\____/ \\__| \\_______|\\_______/  \n' +
     '\n' +
-    'https://github.com/wangkevin1/Atlas                                  \n' + 
+    'https://github.com/wangkevin1/Atlas                                  \n' +
     'Kevin Wang\n\n ',
     'font-family: Consolas, Monaco, monospace; color: #bc2200');

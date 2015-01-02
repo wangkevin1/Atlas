@@ -48,16 +48,7 @@ a.no-style {
 }
 
 //CAROUSEL//
-.at-slide {
-    position: absolute;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    background-attachment: local;
-    background-repeat: no-repeat;
-    background-size: cover;
-    overflow: hidden;
-}
+
 
 .at-carousel {
     position: relative;
@@ -79,19 +70,28 @@ a.no-style {
     .jumbotron {
         background-color: transparent;
     }
+    .at-slide {
+        position: absolute;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        background-attachment: local;
+        background-repeat: no-repeat;
+        background-size: cover;
+        overflow: hidden;
+    }
     .at-slide-current {
-        @extend .at-slide;
         top: 0;
         left: 0;
-        @include animation('atSlideCarousel 12s 0s infinite');
     }
     .at-slide-latter {
-        @extend .at-slide;
         top: 0;
         left: 100%;
-        @include animation('atSlideCarousel 12s 0s infinite');
     }
-    
+    .at-slide-slide {
+        @include animation('atSlideCarousel 2s 0s');
+        @include animation-fill-mode('forwards');
+    }
 }
 
 @include keyframes('atSlideCarousel') {
@@ -99,7 +99,7 @@ a.no-style {
         @include transform('translateX(0)');
         animation-timing-function: ease;
     }
-    25%, 100% {
+    100% {
         @include transform('translateX(-100%)');
         animation-timing-function: ease;
     }
