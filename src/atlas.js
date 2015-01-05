@@ -312,6 +312,7 @@ Atlas.provider('atNav', [
     function () {
         var _brand = "";
         var _states = [];
+        var _rightStates = [];
 
         var setBrand = function (aTemplate, aState) {
             _brand = {
@@ -328,12 +329,21 @@ Atlas.provider('atNav', [
             });
             return this;
         };
+        
+        var addRightTab = function(aName, aState) {
+            _rightStates.push({
+                name: aName, 
+                state: aState
+            });
+            return this;
+        }
 
         var $get = ['$http',
 
             function ($http) {
                 var brand = _brand;
                 var states = _states;
+                var rightStates = _rightStates;
 
                 var getBrand = function (callback) {
                     return brand;
@@ -342,17 +352,23 @@ Atlas.provider('atNav', [
                 var getTabs = function () {
                     return states;
                 };
+                
+                var getRightTabs = function() {
+                    return rightStates;
+                };
 
                 return {
                     getBrand: getBrand,
-                    getTabs: getTabs
+                    getTabs: getTabs,
+                    getRightTabs: getRightTabs
                 };
             }
         ];
         return {
             $get: $get,
             setBrand: setBrand,
-            addTab: addTab
+            addTab: addTab, 
+            addRightTab: addRightTab
         };
     }
 ]);
@@ -368,6 +384,7 @@ Atlas.directive('atNavBar', [
                 function ($scope, atNav) {
                     $scope.brand = atNav.getBrand();
                     $scope.tabs = atNav.getTabs();
+                    $scope.rightTabs = atNav.getRightTabs();
                 }
             ]
         };
@@ -528,6 +545,11 @@ Atlas.provider('at', ['$urlRouterProvider', 'atBlogProvider', 'atPageProvider', 
             nav.addTab(name, state);
             return this;
         };
+        
+        var addRightTab = function(name, state) {
+            nav.addRightTab(name, state);
+            return this;
+        };
 
         var $get = function () {
             return {
@@ -541,7 +563,8 @@ Atlas.provider('at', ['$urlRouterProvider', 'atBlogProvider', 'atPageProvider', 
             createBlog: createBlog,
             createPage: createPage,
             setBrand: setBrand,
-            addTab: addTab
+            addTab: addTab, 
+            addRightTab: addRightTab
         };
     }
 ]);

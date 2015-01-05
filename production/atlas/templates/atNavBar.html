@@ -18,7 +18,7 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a class="no-style" href="#">Contact</a>
+                    <li ng-repeat="tab in rightTabs"><a class="no-style" ui-sref="{{tab.state}}">{{tab.name}}</a>
                     </li>
                 </ul>
             </div>
