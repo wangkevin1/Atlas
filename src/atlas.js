@@ -265,18 +265,20 @@ Atlas.provider('atPage', ['$stateProvider',
                 views: {
                     'root@': {
                         templateUrl: aData,
-                        controller: ['$state', '$scope', '$uiViewScroll',
-                            function ($state, $scope, $uiViewScroll) {
-                                $scope.$on('$stateChangeSuccess', function (e) {
-                                    if ($state.params.sectionId == '') {
-                                        $('body').animate({
-                                            scrollTop: '0'
-                                        }, 64);
-                                    } else {
-                                        $uiViewScroll($('#' + $state.params.sectionId));
-                                    }
+                        controller: ['$state', '$scope', '$uiViewScroll', '$timeout',
+                            function ($state, $scope, $uiViewScroll, $timeout) {
+                                $scope.$on('$viewContentLoaded', function (e) {
+                                    $timeout(function () {
+                                        if ($state.params.sectionId == '') {
+                                            $('body').animate({
+                                                scrollTop: '0'
+                                            }, 64);
+                                        } else {
+                                            $uiViewScroll($('#' + $state.params.sectionId));
+                                        }
+                                    }, 0);
                                 });
-                            }
+                        }
                         ]
                     }
                 }
@@ -299,8 +301,7 @@ Atlas.provider('atPage', ['$stateProvider',
             $get: $get,
             createPage: createPage
         };
-    }
-]);
+}]);
 
 //////////////////
 //NAVIGATION BAR//
@@ -457,8 +458,8 @@ Atlas.directive('atCarousel', [
             restrict: 'A',
             scope: {
                 imageArray: '@atCarousel',
-                interval: '@atInterval', 
-                height: '@atHeight', 
+                interval: '@atInterval',
+                height: '@atHeight',
                 width: '@atWidth'
             },
             transclude: true,
