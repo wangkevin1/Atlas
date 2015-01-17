@@ -24,7 +24,7 @@ function fileArray(dir) {
 
 function blogPostArray(dir, attrs) {
     var postArray = [];
-    fileArray(dir).map(function (element) {
+    fileArray(dir).forEach(function (element) {
         var data = require(element);
 
         var attributes = {};
@@ -61,7 +61,7 @@ var REMOTE = {
     sshConfig: {
         host: '',
         username: '',
-        privateKey: fsGet('')
+        privateKey: ''//fsGet(PRIVATE_KEY_PATH)
     }
 };
 
@@ -69,23 +69,29 @@ var REMOTE_DIR = {
     dir: ''
 };
 
-var atBlog = function(aDataPath, aDestDir, aName) {
+var BLOGS = [];
+
+var atBlogMeta = function(aName, aDataPath) {
     return {
-        dataPath: aDataPath,
-        destDir: aDestDir,
-        name: aName
+        name: aName,
+        dataPath: aDataPath
     };
 };
 
-var BLOG = [];
-BLOG.push(new atBlog('', '', ''));
+var addBlog = function(name, dataPath) {
+    BLOGS.push(new atBlogMeta(name, dataPath));
+};
 
-//GULP
-var gulp = require('gulp');
+//ADD BLOGS HERE
+//addBlog(name, dataPath);
+
 
 ///////////
 //PLUGINS//
 ///////////
+
+//GULP
+var gulp = require('gulp');
 
 //hint
 var jshint = require('gulp-jshint');
@@ -170,11 +176,13 @@ gulp.task('data', function () {
 
 //Data Blog Array
 gulp.task('dataBlogArray', ['data'], function () {
-
-    var posts = blogPostArray('data/data_blog', ['id', 'title', 'subtitle', 'date']);
-    return gulp.src('data/blogPostArray.json')
+    return gulp.src('bower_components/atlasjs/blogPostArray.json')
         .pipe(jsonEditor(function (json) {
-            return posts;
+            var blogs = {};
+            BLOGS.forEach(function(element) {
+                blogs[element.name] = blogPostArray(element.dataPath, ['id', 'title', 'subtitle', 'date', 'author']);
+            });
+            return blogs;
         }))
         .pipe(gulp.dest('dist/data'));
 });

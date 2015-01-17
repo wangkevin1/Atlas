@@ -1,4 +1,4 @@
-/*  
+/*
  *            $$\     $$\
  *            $$ |    $$ |
  *  $$$$$$\ $$$$$$\   $$ | $$$$$$\   $$$$$$$\
@@ -40,11 +40,11 @@ Atlas.provider('atBlog', ['$stateProvider',
     function ($stateProvider) {
         var _blogs = {};
 
-        var BlogMeta = function (aData, aPrefix, aPostArray) {
+        var BlogMeta = function (aName, aData) {
             return {
+                name: aName,
                 data: aData,
-                prefix: aPrefix,
-                postArray: aPostArray
+                prefix: aName + 'Post'
             };
         };
 
@@ -72,8 +72,8 @@ Atlas.provider('atBlog', ['$stateProvider',
             }
         });
 
-        var createBlog = function (name, aData, aPrefix, aPostArray) {
-            _blogs[name] = new BlogMeta(aData, aPrefix, aPostArray);
+        var createBlog = function (name, aData) {
+            _blogs[name] = new BlogMeta(name, aData);
             $stateProvider.state('blog.' + name, {
                 url: '/' + name + '/:postId',
                 views: {
@@ -113,7 +113,7 @@ Atlas.provider('atBlog', ['$stateProvider',
                                         callback(data);
                                     }
                                 }).error(function (data, status, headers, config) {
-                                    console.error('atlas failed to retrieve: ' + blog.prefix + postId + '.json', '\nstatus: ' + status);
+                                    console.error('atlas failed to retrieve: ' + blog.data + '/' + blog.prefix + postId + '.json', '\nstatus: ' + status);
                                 });
                         });
                     } else {
@@ -124,15 +124,17 @@ Atlas.provider('atBlog', ['$stateProvider',
                                     callback(data);
                                 }
                             }).error(function (data, status, headers, config) {
-                                console.error('atlas failed to retrieve: ' + blog.prefix + postId + '.json', '\nstatus: ' + status);
+                                console.error('atlas failed to retrieve: ' + blog.data + '/' + blog.prefix + postId + '.json', '\nstatus: ' + status);
                             });
                     }
                 };
 
+                var POST_ARRAY = $http.get('data/blogPostArray.json');
+
                 var getPostArray = function (blogName, callback) {
-                    $http.get(blogs[blogName].postArray).success(function (data, status, headers, config) {
+                    POST_ARRAY.success(function (data, status, headers, config) {
                         if (callback) {
-                            callback(data);
+                            callback(data[blogName]);
                         }
                     });
                 };
@@ -329,10 +331,10 @@ Atlas.provider('atNav', [
             });
             return this;
         };
-        
+
         var addRightTab = function(aName, aState) {
             _rightStates.push({
-                name: aName, 
+                name: aName,
                 state: aState
             });
             return this;
@@ -352,7 +354,7 @@ Atlas.provider('atNav', [
                 var getTabs = function () {
                     return states;
                 };
-                
+
                 var getRightTabs = function() {
                     return rightStates;
                 };
@@ -367,7 +369,7 @@ Atlas.provider('atNav', [
         return {
             $get: $get,
             setBrand: setBrand,
-            addTab: addTab, 
+            addTab: addTab,
             addRightTab: addRightTab
         };
     }
@@ -545,7 +547,7 @@ Atlas.provider('at', ['$urlRouterProvider', 'atBlogProvider', 'atPageProvider', 
             nav.addTab(name, state);
             return this;
         };
-        
+
         var addRightTab = function(name, state) {
             nav.addRightTab(name, state);
             return this;
@@ -563,7 +565,7 @@ Atlas.provider('at', ['$urlRouterProvider', 'atBlogProvider', 'atPageProvider', 
             createBlog: createBlog,
             createPage: createPage,
             setBrand: setBrand,
-            addTab: addTab, 
+            addTab: addTab,
             addRightTab: addRightTab
         };
     }
