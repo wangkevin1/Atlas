@@ -20,6 +20,7 @@
     "gulp-concat": "~2.4.1",
     "gulp-data": "~1.0.2",
     "merge-stream": "~0.1.6",
-    "gulp-json-editor": "~2.2.1"
+    "gulp-json-editor": "~2.2.1",
+    "gulp-ssh": "~0.3.3"
   }
 }

@@ -2,24 +2,83 @@
 //GULP SCRIPTS//
 ////////////////
 
+//////////////////
+//File Structure//
+//////////////////
+
+//node
+var fs = require('fs');
+var path = require('path');
+
+//get from file system
+function fsGet(path) {
+    return fs.readFileSync(path);
+}
+
+//File Array in directory
+function fileArray(dir) {
+    return fs.readdirSync(dir).map(function (element) {
+        return './' + dir + '/' + element;
+    });
+}
+
+function blogPostArray(dir, attrs) {
+    var postArray = [];
+    fileArray(dir).map(function (element) {
+        var data = require(element);
+
+        var attributes = {};
+
+        for (var i = 0; i < attrs.length; i++) {
+            attributes[attrs[i]] = data[attrs[i]];
+        }
+        postArray.unshift(attributes);
+    });
+    return postArray;
+}
+
+
 //////////
 //CONFIG//
 //////////
 
 //vendor
 var VENDORS = [
-    'bower_components/moment-duration-format/lib/moment-duration-format.js', 
+    'bower_components/moment-duration-format/lib/moment-duration-format.js',
     'bower_components/atlasjs/production/**'
 ];
 
 //browser-sync
-var CONFIG = {
+var BSYNC = {
     server: {
         baseDir: 'dist'
     },
     port: 1212
 };
 
+var REMOTE = {
+    ignoreErrors: false,
+    sshConfig: {
+        host: '',
+        username: '',
+        privateKey: fsGet('')
+    }
+};
+
+var REMOTE_DIR = {
+    dir: ''
+};
+
+var atBlog = function(aDataPath, aDestDir, aName) {
+    return {
+        dataPath: aDataPath,
+        destDir: aDestDir,
+        name: aName
+    };
+};
+
+var BLOG = [];
+BLOG.push(new atBlog('', '', ''));
 
 //GULP
 var gulp = require('gulp');
@@ -27,10 +86,6 @@ var gulp = require('gulp');
 ///////////
 //PLUGINS//
 ///////////
-
-//node
-var fs = require('fs');
-var path = require('path');
 
 //hint
 var jshint = require('gulp-jshint');
@@ -54,31 +109,9 @@ var jsonEditor = require('gulp-json-editor');
 var merge = require('merge-stream');
 var browsersync = require('browser-sync');
 
-//////////////////
-//File Structure//
-//////////////////
+//deploy
+var ssh = require('gulp-ssh')(REMOTE);
 
-//File Array in directory
-var fileArray = function (dir) {
-    return fs.readdirSync(dir).map(function (element) {
-        return './' + dir + '/' + element;
-    });
-};
-
-var blogPostArray = function (dir, attrs) {
-    var postArray = [];
-    fileArray(dir).map(function (element) {
-        var data = require(element);
-
-        var attributes = {};
-
-        for (var i = 0; i < attrs.length; i++) {
-            attributes[attrs[i]] = data[attrs[i]];
-        }
-        postArray.unshift(attributes);
-    });
-    return postArray;
-};
 
 /////////
 //TASKS//
@@ -86,7 +119,7 @@ var blogPostArray = function (dir, attrs) {
 
 //BROWSER-SYNC tasks
 gulp.task('bs', ['compile'], function () {
-    browsersync(CONFIG);
+    browsersync(BSYNC);
 });
 
 //CLEAN dist
@@ -138,7 +171,7 @@ gulp.task('data', function () {
 //Data Blog Array
 gulp.task('dataBlogArray', ['data'], function () {
 
-    var posts = blogPostArray('data/data_blog', ['id', 'title', 'date']);
+    var posts = blogPostArray('data/data_blog', ['id', 'title', 'subtitle', 'date']);
     return gulp.src('data/blogPostArray.json')
         .pipe(jsonEditor(function (json) {
             return posts;
@@ -190,7 +223,7 @@ gulp.task('watch', ['compile'], function () {
 
 });
 
-//Watch dev 
+//Watch dev
 gulp.task('watch-D', ['compile-D'], function () {
     gulp.watch('html/*.html', ['html']);
     gulp.watch('templates/*.html', ['templates']);
@@ -219,10 +252,10 @@ gulp.task('scripts-D', function () {
         }));
 });
 
-//COMPILE dev 
+//COMPILE dev
 gulp.task('compile-D', ['vendor', 'html', 'templates', 'assets', 'data', 'dataBlogArray', 'scss', 'scripts-D']);
 
-//ATLAS 
+//ATLAS
 
 gulp.task('atScript', function () {
     return gulp.src('src/*.js')
@@ -252,7 +285,7 @@ gulp.task('ghpages', ['compile'], function () {
         .pipe(gulp.dest('../siteGhpages'));
 });
 
-//Start Server 
+//Start Server
 gulp.task('start', ['compile', 'bs', 'watch'], function () {
     util.log('\n' +
         '            $$\\     $$\\                      \n' +
@@ -263,12 +296,21 @@ gulp.task('start', ['compile', 'bs', 'watch'], function () {
         ' $$  __$$ | $$ |$$\\ $$ |$$  __$$ | \\____$$\\  \n' +
         ' \\$$$$$$$ | \\$$$$  |$$ |\\$$$$$$$ |$$$$$$$  | \n' +
         '  \\_______|  \\____/ \\__| \\_______|\\_______/  \n' +
-        '\n//LOCALHOST:' + CONFIG.port + '//\n'
+        '\n//LOCALHOST:' + BSYNC.port + '//\n'
     );
 });
 
-//Start Server dev 
+//Start Server dev
 gulp.task('start-D', ['compile-D', 'bs', 'watch-D']);
 
-//DEFAULT run server 
-gulp.task('default', ['start']);
+//////////
+//DEPLOY//
+//////////
+
+gulp.task('deploy', ['compile'], function() {
+    return gulp.src('dist/**')
+        .pipe(ssh.sftp('write', REMOTE_DIR.dir));
+});
+
+//DEFAULT run server
+gulp.task('default', ['deploy']);
