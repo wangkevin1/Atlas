@@ -22,6 +22,10 @@ function fileArray(dir) {
     });
 }
 
+function getUserHome() {
+    return (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + '/';
+}
+
 function blogPostArray(dir, attrs) {
     var postArray = [];
     fileArray(dir).forEach(function (element) {
@@ -57,17 +61,13 @@ var BSYNC = {
 };
 
 var REMOTE = {
-    ignoreErrors: false,
-    sshConfig: {
+    sftpConfig: {
         host: '',
-        username: '',
-        privateKey: ''//fsGet(PRIVATE_KEY_PATH)
+        auth: 'privateKey',
+        remotePath: ''
     }
 };
 
-var REMOTE_DIR = {
-    dir: ''
-};
 
 var BLOGS = [];
 
@@ -116,8 +116,7 @@ var merge = require('merge-stream');
 var browsersync = require('browser-sync');
 
 //deploy
-var ssh = require('gulp-ssh')(REMOTE);
-
+var sftp = require('gulp-sftp');
 
 /////////
 //TASKS//
@@ -317,7 +316,7 @@ gulp.task('start-D', ['compile-D', 'bs', 'watch-D']);
 
 gulp.task('deploy', ['compile'], function() {
     return gulp.src('dist/**')
-        .pipe(ssh.sftp('write', REMOTE_DIR.dir));
+        .pipe(sftp(REMOTE.sftpConfig));
 });
 
 //DEFAULT run server

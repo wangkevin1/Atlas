@@ -1,6 +1,6 @@
 {
   "name": "Atlas",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "static site engine",
   "main": "production/atlas/atlas.min.js",
   "author": "Kevin Wang",
@@ -21,6 +21,6 @@
     "gulp-data": "~1.0.2",
     "merge-stream": "~0.1.6",
     "gulp-json-editor": "~2.2.1",
-    "gulp-ssh": "~0.3.3"
+    "gulp-sftp": "~0.1.4"
   }
 }

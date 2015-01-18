@@ -1,0 +1,7 @@
+{
+    "privateKey": {
+        "user": "username",
+        "passphrase": "passphrase",
+        "keyLocation": "/full/path/to/key"
+    }
+}
