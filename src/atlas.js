@@ -13,7 +13,7 @@
  *
  */
 
-var Atlas = angular.module('Atlas', ['ngAnimate', 'ui.router', 'ui.utils', 'ui.bootstrap', 'headroom']);
+var Atlas = angular.module('Atlas', ['ngAnimate', 'ui.router', 'ui.utils', 'headroom']);
 
 /////////////
 //DEVELOPER//
